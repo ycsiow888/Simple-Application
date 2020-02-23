@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import route from './route';
 import { sequelize } from './config/database';
 dotenv.config(); // development purpose
-console.log('should be here ', process.env.HOST);
+
 class App {
   public app: Application;
   public port: number;
