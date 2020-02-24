@@ -84,7 +84,6 @@ class UserController implements IControllerBase {
 
       res.status(204).send();
     } catch (e) {
-      console.log('e is ', e);
       next(e);
     }
   };
