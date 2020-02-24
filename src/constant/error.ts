@@ -7,6 +7,10 @@ class ErrorCode {
     message: 'User not found',
     code: 'USER_NOT_FOUND'
   };
+  static readonly UNEXPECTED_ERROR = {
+    message: 'Unexpected error. Please contact administrator',
+    code: 'UNEXPECTED_ERROR'
+  };
 }
 
 export interface IErrorCode {

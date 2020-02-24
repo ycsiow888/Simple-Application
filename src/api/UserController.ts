@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { check, validationResult } from 'express-validator';
 import { Teacher, Student, User } from '../config/database';
 import { AssignmentService } from './../services/AssignmentService';
+import { UserService } from './../services/UserService';
 import IControllerBase from '../interfaces/IControllerBase.interface';
 
 class UserController implements IControllerBase {
@@ -37,41 +38,43 @@ class UserController implements IControllerBase {
 
     try {
       // Register user if not exist
-      const [user] = await User.findOrCreate({
-        where: {
-          email: teacher
-        },
-        defaults: {
-          email: teacher,
-          role: this.teacher
-        }
-      });
+      const userCondition = { email: teacher };
+      const userDefault = { email: teacher, role: this.teacher };
+      const [user] = await new UserService().userFindOrCreates(
+        userCondition,
+        userDefault
+      );
 
       // Register teacher if not exist
-      const [registeredTeacher] = await Teacher.findOrCreate({
-        where: { userId: user.id },
-        defaults: {
-          userId: user.id,
-          graduated_at: 'University'
-        }
-      });
+      const teacherCondition = { userId: user.id };
+      const teacherDefault = {
+        userId: user.id,
+        graduated_at: 'University'
+      };
+      const [registeredTeacher] = await new UserService().teacherFindOrCreates(
+        teacherCondition,
+        teacherDefault
+      );
 
       // Register student if not exist
       student.forEach(async (student_email: String) => {
-        const [user, created] = await User.findOrCreate({
-          where: { email: student_email, role: this.student },
-          defaults: {
-            email: student_email,
-            role: this.student
-          }
-        });
-        const [registeredStudent] = await Student.findOrCreate({
-          where: { userId: user.id },
-          defaults: {
-            class: 'primary',
-            userId: user.id
-          }
-        });
+        const userStudCondition = { email: student_email, role: this.student };
+        const userStudDefault = { email: student_email, role: this.student };
+
+        const [user, created] = await new UserService().userFindOrCreates(
+          userStudCondition,
+          userStudDefault
+        );
+
+        const studentCondition = { userId: user.id };
+        const studentDefault = { class: 'primary', userId: user.id };
+
+        const [
+          registeredStudent
+        ] = await new UserService().studentFindOrCreates(
+          studentCondition,
+          studentDefault
+        );
 
         // Assign student to specific teacher
         if (registeredStudent) {

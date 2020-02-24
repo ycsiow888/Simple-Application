@@ -13,7 +13,7 @@ export const UserModel = function(sequelize: any, type: any) {
       email: { type: Sequelize.STRING, allowNull: false },
       password: Sequelize.STRING,
       role: Sequelize.STRING,
-      status: Sequelize.STRING,
+      status: { type: Sequelize.STRING, defaultValue: 'active' },
       created_by: Sequelize.INTEGER,
       updated_by: Sequelize.INTEGER
     },

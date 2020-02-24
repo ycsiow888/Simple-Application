@@ -3,9 +3,11 @@ import ErrorCode from '../constant/error';
 import { QueryTypes, Op } from 'sequelize';
 import CustomError from '../types/customError';
 import { sequelize, User } from '../config/database';
+import { CommonService } from './../services/CommonService';
 import { Request, Response, NextFunction } from 'express';
 import { check, validationResult, query } from 'express-validator';
 import IControllerBase from '../interfaces/IControllerBase.interface';
+import { UserService } from '../services/UserService';
 
 class AssignmentController implements IControllerBase {
   public path = '';
@@ -32,20 +34,13 @@ class AssignmentController implements IControllerBase {
       }
       const email = req.body.student;
 
-      const user = await User.findOne({
-        where: {
-          email
-        }
-      });
-
       // If user found then suspend its status
-      if (user) {
-        user.status = 'inactive';
-        await user.save();
-        return res.status(204).send();
+      const status = await new UserService().suspendUserWithEmail(email);
+      if (!status) {
+        next(new CustomError(ErrorCode.UNEXPECTED_ERROR));
       }
 
-      next(new CustomError(ErrorCode.USER_NOT_FOUND));
+      return res.status(204).send();
     } catch (e) {
       next(e);
     }
@@ -83,10 +78,11 @@ class AssignmentController implements IControllerBase {
       student_query += 'group by student_id having COUNT(teacher_id) = :count';
 
       // Get common student id
-      const students_user = await sequelize.query(student_query, {
-        replacements: { email: teacher, count },
-        type: QueryTypes.SELECT
-      });
+      const students_user = await new CommonService().query(
+        student_query,
+        { email: teacher, count },
+        QueryTypes.SELECT
+      );
 
       // Convert student id into array
       const student_array = students_user.map((item: any) => {
@@ -94,9 +90,12 @@ class AssignmentController implements IControllerBase {
       });
 
       // Get student id array info
-      const student_info = await sequelize.query(
-        'SELECT users.email as email FROM `users` inner join students on users.id = students.userId where students.id in (:id)',
-        { replacements: { id: student_array }, type: QueryTypes.SELECT }
+      const student_info_query =
+        'SELECT users.email as email FROM `users` inner join students on users.id = students.userId where students.id in (:id)';
+      const student_info = await new CommonService().query(
+        student_info_query,
+        { id: student_array },
+        QueryTypes.SELECT
       );
 
       const result = { students: student_info };

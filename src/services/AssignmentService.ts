@@ -1,27 +1,24 @@
-import { Request, Response } from 'express';
-// import {User} from '../config/database';
 import { Assignment } from './../config/database';
-import CustomError from '../types/customError';
-import ErrorCode from '../constant/error';
+import StatusCode from '../constant/status';
 
 // Instead of using function from controller
 // Calling service when needed
 export class AssignmentService {
-  public async createAssignment(teacher: number, student: number) {
+  public async createAssignment(t_id: number, s_id: number) {
     try {
       return await Assignment.findOrCreate({
         where: {
-          student_id: student,
-          teacher_id: teacher
+          student_id: s_id,
+          teacher_id: t_id
         },
         defaults: {
-          teacher_id: teacher,
-          student_id: student,
-          status: 'active'
+          teacher_id: t_id,
+          student_id: s_id,
+          status: StatusCode.ACTIVE
         }
       });
     } catch (e) {
-      throw new CustomError(ErrorCode.DOMAIN_NOT_FOUND);
+      throw e;
     }
   }
 }

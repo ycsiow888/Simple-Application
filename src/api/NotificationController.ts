@@ -2,6 +2,7 @@ import * as express from 'express';
 import { QueryTypes, Op } from 'sequelize';
 import { sequelize, User } from '../config/database';
 import { Request, Response, NextFunction } from 'express';
+import { CommonService } from './../services/CommonService';
 import { check, validationResult, query } from 'express-validator';
 import IControllerBase from '../interfaces/IControllerBase.interface';
 
@@ -41,6 +42,7 @@ class NotificationController implements IControllerBase {
       }
 
       const teacher = req.body.teacher;
+      const text = req.body.notification;
 
       // Get list of student id registered/assigned to this teacher
       let student_query =
@@ -52,32 +54,21 @@ class NotificationController implements IControllerBase {
         'inner join students on assignments.student_id = students.id ';
       student_query += 'where users.email = :teacher';
 
-      const students_user = await sequelize.query(student_query, {
-        replacements: { teacher },
-        type: QueryTypes.SELECT
-      });
+      const students_user = await new CommonService().query(
+        student_query,
+        { teacher },
+        QueryTypes.SELECT
+      );
       const student_user_array = students_user.map((item: any) => {
         return item.student_user_id;
       });
 
-      let text = req.body.notification;
-      let textReceipient = [];
+      const textReceipient = await new CommonService().extractReceipientFromText(
+        text,
+        '@'
+      );
 
-      // Loop in notification until no more @receipient
-      do {
-        // Get index start from @ and substring
-        let startIndex = text.indexOf('@');
-        text = text.substring(startIndex + 1);
-        let endIndex = text.indexOf(' ');
-        endIndex = endIndex < 0 ? text.length : endIndex;
-
-        // Push receipient into text receipient
-        textReceipient.push(text.substring(0, endIndex));
-
-        // Replace leftover string to text
-        text = text.substring(endIndex + 1);
-      } while (text.includes('@'));
-
+      // **Enhance in future by converting into services
       // Get list of not suspended users email which registered under this teacher and email not mention in notification
       let receipient = await User.findAll({
         raw: true,
@@ -99,6 +90,7 @@ class NotificationController implements IControllerBase {
         return item.email;
       });
 
+      // **Enhance in future by converting into services
       // Filter text receipient to only not suspended user
       let notSuspendedUser = await User.findAll({
         raw: true,
