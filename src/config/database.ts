@@ -11,6 +11,7 @@ export const sequelize = new Sequelize(
   process.env.DB_USER,
   '',
   {
+    logging: false,
     host: process.env.HOST,
     dialect: 'mysql',
     max: 10,
