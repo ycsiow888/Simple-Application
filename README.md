@@ -7,10 +7,10 @@ Steps
 2. Move to folder inside
 3. Create database called 'simple_app' and import simple_app.sql into xampp
 4. Rename .env.example to .env (you may change information here to your environment)
-5. Enter npm install
-6. Enter npm run dev to run in local development mode
-7. Enter npm run build to compile typescript into javascript
-8. Enter npm run start and you may browse in http://localhost:5000
+5. Enter **npm install**
+6. Enter **npm run dev** to run in local development mode
+7. Enter **npm run build** to compile typescript into javascript
+8. Enter **npm run start** and you may browse in http://localhost:5000
 
 # Available API Endpoint
 1. http://localhost:5000/api/register
@@ -19,7 +19,7 @@ Steps
 4. http://localhost:5000/api/retrievefornotifications
 
 # Mocha Chai Unit Testing
-1. Enter npm run test
-2. Enter npm run CommonServiceTest
-3. Enter npm run UserServiceTest
-4. Enter npm run AssignmentServiceTest
+1. Enter **npm run test**
+2. Enter **npm run CommonServiceTest**
+3. Enter **npm run UserServiceTest**
+4. Enter **npm run AssignmentServiceTest**
