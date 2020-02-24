@@ -17,3 +17,9 @@ Steps
 2. http://localhost:5000/api/commonstudents?teacher=teacher01@hotmail.com
 3. http://localhost:5000/api/suspend
 4. http://localhost:5000/api/retrievefornotifications
+
+# Mocha Chai Unit Testing
+1. Enter npm run test
+2. Enter npm run CommonServiceTest
+3. Enter npm run UserServiceTest
+4. Enter npm run AssignmentServiceTest
