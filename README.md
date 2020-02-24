@@ -2,11 +2,11 @@
 Simple application using express nodejs in typescript with sequelize mysql
 
 # Instruction Guide to run in local
-** Xampp must be installed and enabled **
-** Assuming typescript, npm and node has been installed globally **
+## Xampp must be installed and enabled ##
+## Assuming typescript, npm and node has been installed globally ##
 Steps
 1. Git clone https://github.com/ycsiow888/Simple-Application.git into local
-2. Move to folder inside
+2. Cd into the folder
 3. Create database called 'simple_app' and import simple_app.sql into xampp
 4. Rename .env.example to .env (you may change information here to your environment)
 5. Enter **npm install**
