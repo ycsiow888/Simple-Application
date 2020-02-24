@@ -14,11 +14,8 @@ Steps
 7. Enter **npm run build** to compile typescript into javascript
 8. Enter **npm run start** and you may browse in http://localhost:5000
 
-# Available API Endpoint
-1. http://localhost:5000/api/register
-2. http://localhost:5000/api/commonstudents?teacher=teacher01@hotmail.com
-3. http://localhost:5000/api/suspend
-4. http://localhost:5000/api/retrievefornotifications
+# Available API Endpoint using Postman
+https://documenter.getpostman.com/view/10495481/SzKVRy4h
 
 # Mocha Chai Unit Testing
 1. Enter **npm run test**
