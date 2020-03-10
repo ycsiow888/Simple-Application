@@ -14,7 +14,7 @@ export class AssignmentService {
         defaults: {
           teacher_id: t_id,
           student_id: s_id,
-          status: StatusCode.ACTIVE
+          status: StatusCode.ACTIVE.message
         }
       });
     } catch (e) {
